@@ -58,7 +58,6 @@ class GDA(LinearModel):
         for i in range(x.shape[0]):
             a = x[i]
             a = np.reshape(a,(x.shape[1],1))
-            sigma += np.dot(a,np.transpose(a))
             if y[i] == 1:
                 count_1 += 1
                 mu_1 += x[i]
@@ -71,6 +70,10 @@ class GDA(LinearModel):
         mu_1 = mu_1/x.shape[0]
         mu_0 = np.reshape(mu_0,(mu_0.shape[0],1))
         mu_1 = np.reshape(mu_1,(mu_1.shape[0],1))
+        x_copy = x
+        x_copy[y == 0] -= mu_0.T
+        x_copy[y == 1] -= mu_1.T
+        sigma = x_copy.T.dot(x_copy)
         sigma = sigma/x.shape[0]
 
         # Write theta in terms of the parameters
